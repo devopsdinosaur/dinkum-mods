@@ -37,7 +37,7 @@ public class Plugin : BaseUnityPlugin {
 		}
 		foreach (InventoryItem item in Inventory.inv.allItems) {
 			if (item.isATool) {
-				logger.LogInfo((object) item.itemName);
+				//logger.LogInfo((object) item.itemName);
 				//logger.LogInfo((object) this.m_durability_loss_multiplier.Value.ToString());
 				//item.fuelOnUse = (int) Math.Floor((float) item.fuelOnUse * this.m_durability_loss_multiplier.Value);
 				item.fuelOnUse = 0;
