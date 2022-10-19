@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-/*
+
 [HarmonyPatch(typeof(BuildingManager), "confirmWantToMoveBuilding")]
 public class HarmonyPatch_BuildingManager_confirmWantToMoveBuilding {
 
@@ -21,4 +21,3 @@ public class HarmonyPatch_BuildingManager_confirmWantToMoveBuilding {
     }
 
 }
-*/

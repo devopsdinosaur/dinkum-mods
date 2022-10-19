@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-/*
+
 [HarmonyPatch(typeof(BuildingManager), "getWantToMovePlayerHouseConvo")]
 public class HarmonyPatch_BuildingManager_getWantToMovePlayerHouseConvo {
 
@@ -19,8 +19,6 @@ public class HarmonyPatch_BuildingManager_getWantToMovePlayerHouseConvo {
 			ConversationManager.manage.talkToNPC(ConversationManager.manage.lastTalkTo, ___alreadyMovingABuilding);
 		} else if (!Inventory.inv.checkIfItemCanFit(0, 1)) {
 			ConversationManager.manage.talkToNPC(ConversationManager.manage.lastTalkTo, ___noRoomInInv);
-		} else if (Inventory.inv.wallet < 25000) {
-			ConversationManager.manage.talkToNPC(ConversationManager.manage.lastTalkTo, ___wantToMovePlayerHouseNotEnoughMoney);
 		}
 		___movingHouse = true;
 		ConversationManager.manage.talkToNPC(ConversationManager.manage.lastTalkTo, ___wantToMovePlayerHouse);
@@ -28,4 +26,3 @@ public class HarmonyPatch_BuildingManager_getWantToMovePlayerHouseConvo {
 	}
 
 }
-*/
