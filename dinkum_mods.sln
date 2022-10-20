@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "devopsdinosaur.dinkum.free_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "devopsdinosaur.dinkum.no_more_watering", "devopsdinosaur.dinkum.no_more_watering\devopsdinosaur.dinkum.no_more_watering.csproj", "{2692E22A-F694-483D-9F7D-9A986B10630E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "devopsdinosaur.dinkum.only_scythe_kills_crops", "devopsdinosaur.dinkum.only_scythe_kills_crops\devopsdinosaur.dinkum.only_scythe_kills_crops.csproj", "{50A0BF06-A8DA-458D-874D-64094D122AA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "devopsdinosaur.dinkum.weapons_wont_kill_crops", "devopsdinosaur.dinkum.weapons_wont_kill_crops\devopsdinosaur.dinkum.weapons_wont_kill_crops.csproj", "{7F781692-DEE1-4E8C-A937-23F3A6784AD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{2692E22A-F694-483D-9F7D-9A986B10630E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2692E22A-F694-483D-9F7D-9A986B10630E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2692E22A-F694-483D-9F7D-9A986B10630E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{50A0BF06-A8DA-458D-874D-64094D122AA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{50A0BF06-A8DA-458D-874D-64094D122AA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{50A0BF06-A8DA-458D-874D-64094D122AA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{50A0BF06-A8DA-458D-874D-64094D122AA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F781692-DEE1-4E8C-A937-23F3A6784AD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F781692-DEE1-4E8C-A937-23F3A6784AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F781692-DEE1-4E8C-A937-23F3A6784AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F781692-DEE1-4E8C-A937-23F3A6784AD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
