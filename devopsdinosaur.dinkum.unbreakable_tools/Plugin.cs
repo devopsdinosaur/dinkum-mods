@@ -4,10 +4,13 @@ using HarmonyLib;
 using System;
 
 
-[BepInPlugin("devopsdinosaur.dinkum.unbreakable_tools", "Unbreakable Tools", "0.0.1")]
+[BepInPlugin("devopsdinosaur.dinkum.unbreakable_tools", "Unbreakable Tools", "0.0.2")]
 public class Plugin : BaseUnityPlugin {
 
+	private const int ITEM_FIX_FREQUENCY_MS = 1000;
+
 	private Harmony m_harmony = new Harmony("devopsdinosaur.dinkum.unbreakable_tools");
+	private DateTime m_last_update_time = new DateTime(0);
 	
 	public Plugin() {
 	}
@@ -24,24 +27,27 @@ public class Plugin : BaseUnityPlugin {
 		}
 	}
 
+	private void Update() {
+		InventorySlot slot;
+
+		if ((int) ((DateTime.Now - this.m_last_update_time).TotalMilliseconds) < ITEM_FIX_FREQUENCY_MS) {
+			return;
+		}
+		for (int i = 0; i < Inventory.inv.invSlots.Length; i++) {
+			slot = Inventory.inv.invSlots[i];
+			if (slot.itemNo != -1 && Inventory.inv.allItems[slot.itemNo].isATool) {
+				if (slot.stack < slot.itemInSlot.fuelMax) {
+					slot.updateSlotContentsAndRefresh(slot.itemNo, slot.itemInSlot.fuelMax);
+				}
+			}
+		}
+		this.m_last_update_time = DateTime.Now;
+	}
+
 	[HarmonyPatch(typeof(Inventory), "damageAllTools")]
 	class HarmonyPatch_Inventory_damageAllTools {
 
 		private static bool Prefix(ref Inventory __instance) {
-			return false;
-		}
-	}
-
-	[HarmonyPatch(typeof(Inventory), "checkIfToolNearlyBroken")]
-	class HarmonyPatch_Inventory_checkIfToolNearlyBroken {
-
-		private static bool Prefix(ref bool __result, ref Inventory __instance) {
-			for (int i = 0; i < __instance.invSlots.Length; i++) {
-				if (__instance.invSlots[i].itemNo != -1 && __instance.allItems[__instance.invSlots[i].itemNo].isATool) {
-					__instance.invSlots[i].stack = __instance.invSlots[i].itemInSlot.fuelMax;
-				}
-			}
-			__result = false;
 			return false;
 		}
 	}
