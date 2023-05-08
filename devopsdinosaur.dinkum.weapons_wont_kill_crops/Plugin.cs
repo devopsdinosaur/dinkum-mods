@@ -4,7 +4,7 @@ using HarmonyLib;
 using BepInEx.Configuration;
 
 
-[BepInPlugin("devopsdinosaur.dinkum.weapons_wont_kill_crops", "Weapons Won't Kill Crops", "0.0.1")]
+[BepInPlugin("devopsdinosaur.dinkum.weapons_wont_kill_crops", "Weapons Won't Kill Crops", "0.0.2")]
 public class Plugin : BaseUnityPlugin {
 
 	private Harmony m_harmony = new Harmony("devopsdinosaur.dinkum.weapons_wont_kill_crops");

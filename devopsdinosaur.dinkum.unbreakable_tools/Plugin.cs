@@ -4,7 +4,7 @@ using HarmonyLib;
 using System;
 
 
-[BepInPlugin("devopsdinosaur.dinkum.unbreakable_tools", "Unbreakable Tools", "0.0.2")]
+[BepInPlugin("devopsdinosaur.dinkum.unbreakable_tools", "Unbreakable Tools", "0.0.3")]
 public class Plugin : BaseUnityPlugin {
 
 	private const int ITEM_FIX_FREQUENCY_MS = 1000;

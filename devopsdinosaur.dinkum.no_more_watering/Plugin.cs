@@ -3,7 +3,7 @@ using BepInEx;
 using HarmonyLib;
 
 
-[BepInPlugin("devopsdinosaur.dinkum.no_more_watering", "No More Watering", "0.0.1")]
+[BepInPlugin("devopsdinosaur.dinkum.no_more_watering", "No More Watering", "0.0.2")]
 public class Plugin : BaseUnityPlugin {
 
 	private Harmony m_harmony = new Harmony("devopsdinosaur.dinkum.no_more_watering");
