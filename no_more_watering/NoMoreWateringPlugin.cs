@@ -6,7 +6,7 @@ using HarmonyLib;
 using System;
 
 
-[BepInPlugin("devopsdinosaur.dinkum.no_more_watering", "No More Watering", "0.0.4")]
+[BepInPlugin("devopsdinosaur.dinkum.no_more_watering", "No More Watering", "0.0.5")]
 public class NoMoreWateringPlugin : BaseUnityPlugin {
 
 	private Harmony m_harmony = new Harmony("devopsdinosaur.dinkum.no_more_watering");
@@ -20,7 +20,7 @@ public class NoMoreWateringPlugin : BaseUnityPlugin {
 			if (m_enabled.Value) {
 				this.m_harmony.PatchAll();
 			}
-			logger.LogInfo($"devopsdinosaur.dinkum.no_more_watering v0.0.4{(m_enabled.Value ? "" : " [inactive; disabled in config]")} loaded.");
+			logger.LogInfo((object) $"devopsdinosaur.dinkum.no_more_watering v0.0.5{(m_enabled.Value ? "" : " [inactive; disabled in config]")} loaded.");
 		} catch (Exception e) {
 			logger.LogError("** Awake FATAL - " + e.StackTrace);
 		}

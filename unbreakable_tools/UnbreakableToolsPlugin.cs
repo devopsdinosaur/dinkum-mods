@@ -1,5 +1,4 @@
-﻿
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Configuration;
 using HarmonyLib;
@@ -7,11 +6,25 @@ using System;
 using UnityEngine;
 using System.Reflection;
 
+public static class PluginInfo {
 
-[BepInPlugin("devopsdinosaur.dinkum.unbreakable_tools", "Unbreakable Tools", "0.0.5")]
+	public const string TITLE = "Unbreakable Tools";
+	public const string NAME = "unbreakable_tools";
+
+	public const string VERSION = "0.0.7";
+	public static string[] CHANGELOG = new string[] {
+		"v0.0.7 - Fixed issue with mining helmet not retaining charge"
+	};
+
+	public const string AUTHOR = "devopsdinosaur";
+	public const string GAME = "dinkum";
+	public const string GUID = AUTHOR + "." + GAME + "." + NAME;
+}
+
+[BepInPlugin(PluginInfo.GUID, PluginInfo.TITLE, PluginInfo.VERSION)]
 public class UnbreakableToolsPlugin : BaseUnityPlugin {
 
-	private Harmony m_harmony = new Harmony("devopsdinosaur.dinkum.unbreakable_tools");
+	private Harmony m_harmony = new Harmony(PluginInfo.GUID);
 	public static ManualLogSource logger;
 	private static ConfigEntry<bool> m_enabled;
 	
@@ -19,10 +32,8 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 		logger = this.Logger;
 		try {
 			m_enabled = this.Config.Bind<bool>("General", "Enabled", true, "Set to false to disable this mod.");
-			if (m_enabled.Value) {
-				this.m_harmony.PatchAll();
-			}
-			logger.LogInfo($"devopsdinosaur.dinkum.unbreakable_tools v0.0.5{(m_enabled.Value ? "" : " [inactive; disabled in config]")} loaded.");
+			this.m_harmony.PatchAll();
+			logger.LogInfo($"{PluginInfo.GUID} v{PluginInfo.VERSION} loaded.");
 		} catch (Exception e) {
 			logger.LogError("** Awake FATAL - " + e.StackTrace);
 		}
@@ -47,6 +58,8 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 						if (slot.stack < slot.itemInSlot.fuelMax) {
 							slot.updateSlotContentsAndRefresh(slot.itemNo, slot.itemInSlot.fuelMax);
 						}
+					} else if (EquipWindow.equip.hatSlot.itemNo == EquipWindow.equip.minersHelmet.getItemId() || EquipWindow.equip.hatSlot.itemNo == EquipWindow.equip.emptyMinersHelmet.getItemId()) {
+						EquipWindow.equip.hatSlot.stack = EquipWindow.equip.hatSlot.itemInSlot.fuelMax;
 					}
 				}
 				return true;

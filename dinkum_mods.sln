@@ -3,13 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32516.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "no_more_watering", "no_more_watering\no_more_watering.csproj", "{4CD311F1-AA7B-496E-A69A-5BFBA1CC1354}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "no_more_watering", "no_more_watering\no_more_watering.csproj", "{4CD311F1-AA7B-496E-A69A-5BFBA1CC1354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "unbreakable_tools", "unbreakable_tools\unbreakable_tools.csproj", "{2CD34BAC-FCCE-4A97-81C3-5070BB60FCB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "unbreakable_tools", "unbreakable_tools\unbreakable_tools.csproj", "{2CD34BAC-FCCE-4A97-81C3-5070BB60FCB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "weapons_wont_kill_crops", "weapons_wont_kill_crops\weapons_wont_kill_crops.csproj", "{2E25B868-E288-42D2-A789-11388B3C3A43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "weapons_wont_kill_crops", "weapons_wont_kill_crops\weapons_wont_kill_crops.csproj", "{2E25B868-E288-42D2-A789-11388B3C3A43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testing", "testing\testing.csproj", "{53FDA850-4E89-4BCE-8055-1D2F8D0D31F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "testing", "testing\testing.csproj", "{53FDA850-4E89-4BCE-8055-1D2F8D0D31F0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3D24ECE3-F17A-4D31-BE1D-2771B41D0BBE}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+		solution.targets = solution.targets
+		solution_private.targets = solution_private.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

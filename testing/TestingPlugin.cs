@@ -23,7 +23,7 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 			if (m_enabled.Value) {
 				this.m_harmony.PatchAll();
 			}
-			logger.LogInfo($"devopsdinosaur.dinkum.testing v0.0.0{(m_enabled.Value ? "" : " [inactive; disabled in config]")} loaded.");
+			logger.LogInfo((object) $"devopsdinosaur.dinkum.testing v0.0.0{(m_enabled.Value ? "" : " [inactive; disabled in config]")} loaded.");
 		} catch (Exception e) {
 			logger.LogError("** Awake FATAL - " + e.StackTrace);
 		}
@@ -107,7 +107,7 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 					try {
 						info.action();
 					} catch (Exception e) {
-						logger.LogError($"PluginUpdater.Update.{info.name} Exception - {e.StackTrace}");
+						logger.LogError((object) $"PluginUpdater.Update.{info.name} Exception - {e.StackTrace}");
 					}
 				}
 			}
@@ -118,7 +118,7 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 		for (int index = 0; ; index++) {
 			try {
 				StackFrame frame = new StackFrame(index);
-				logger.LogInfo($"StackFrame[{index}] - file: {frame.GetFileName()}, line: {frame.GetFileLineNumber()}, method: {frame.GetMethod().Name}");
+				logger.LogInfo((object) $"StackFrame[{index}] - file: {frame.GetFileName()}, line: {frame.GetFileLineNumber()}, method: {frame.GetMethod().Name}");
 			} catch {
 				break;
 			}
