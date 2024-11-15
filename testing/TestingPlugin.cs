@@ -10,141 +10,77 @@ using System.Diagnostics;
 using System.Collections.Generic;
 
 [BepInPlugin("devopsdinosaur.dinkum.testing", "Testing", "0.0.0")]
-public class UnbreakableToolsPlugin : BaseUnityPlugin {
-
+public class TestPlugin : DDPlugin {
 	private Harmony m_harmony = new Harmony("devopsdinosaur.dinkum.testing");
-	public static ManualLogSource logger;
 	private static ConfigEntry<bool> m_enabled;
 	
 	private void Awake() {
 		logger = this.Logger;
 		try {
 			m_enabled = this.Config.Bind<bool>("General", "Enabled", true, "Set to false to disable this mod.");
-			if (m_enabled.Value) {
-				this.m_harmony.PatchAll();
-			}
+			DDPlugin.set_log_level(DDPlugin.LogLevel.Debug);
+			this.m_harmony.PatchAll();
 			logger.LogInfo((object) $"devopsdinosaur.dinkum.testing v0.0.0{(m_enabled.Value ? "" : " [inactive; disabled in config]")} loaded.");
 		} catch (Exception e) {
 			logger.LogError("** Awake FATAL - " + e.StackTrace);
 		}
 	}
 
-	public static bool list_descendants(Transform parent, Func<Transform, bool> callback, int indent) {
-		Transform child;
-		string indent_string = "";
-		for (int counter = 0; counter < indent; counter++) {
-			indent_string += " => ";
-		}
-		for (int index = 0; index < parent.childCount; index++) {
-			child = parent.GetChild(index);
-			logger.LogInfo(indent_string + child.gameObject.name);
-			if (callback != null) {
-				if (callback(child) == false) {
-					return false;
-				}
-			}
-			list_descendants(child, callback, indent + 1);
-		}
-		return true;
-	}
-
-	public static bool enum_descendants(Transform parent, Func<Transform, bool> callback) {
-		Transform child;
-		for (int index = 0; index < parent.childCount; index++) {
-			child = parent.GetChild(index);
-			if (callback != null) {
-				if (callback(child) == false) {
-					return false;
-				}
-			}
-			enum_descendants(child, callback);
-		}
-		return true;
-	}
-
-	public static void list_component_types(Transform obj) {
-		foreach (Component component in obj.GetComponents<Component>()) {
-			logger.LogInfo(component.GetType().ToString());
-		}
-	}
-
-	private class PluginUpdater : MonoBehaviour {
-
-		private static PluginUpdater m_instance = null;
-		public static PluginUpdater Instance {
-			get {
-				return m_instance;
-			}
-		}
-		private class UpdateInfo {
-			public string name;
-			public float frequency;
-			public float elapsed;
-			public Action action;
-		}
-		private List<UpdateInfo> m_actions = new List<UpdateInfo>();
-
-		public static PluginUpdater create(GameObject parent) {
-			if (m_instance != null) {
-				return m_instance;
-			}
-			return (m_instance = parent.AddComponent<PluginUpdater>());
-		}
-
-		public void register(string name, float frequency, Action action) {
-			m_actions.Add(new UpdateInfo {
-				name = name,
-				frequency = frequency,
-				elapsed = frequency,
-				action = action
-			});
-		}
-
-		public void Update() {
-			foreach (UpdateInfo info in m_actions) {
-				if ((info.elapsed += Time.deltaTime) >= info.frequency) {
-					info.elapsed = 0f;
-					try {
-						info.action();
-					} catch (Exception e) {
-						logger.LogError((object) $"PluginUpdater.Update.{info.name} Exception - {e.StackTrace}");
-					}
-				}
-			}
-		}
-	}
-
-	public static void print_stack() {
-		for (int index = 0; ; index++) {
-			try {
-				StackFrame frame = new StackFrame(index);
-				logger.LogInfo((object) $"StackFrame[{index}] - file: {frame.GetFileName()}, line: {frame.GetFileLineNumber()}, method: {frame.GetMethod().Name}");
-			} catch {
-				break;
-			}
-		}
-	}
-
-	[HarmonyPatch(typeof(WorldManager), "Awake")]
-	class HarmonyPatch_WorldManager_Awake {
-
-		private static bool Prefix(WorldManager __instance) {
-			try {
-				PluginUpdater.create(__instance.gameObject);
-				PluginUpdater.Instance.register("testing_update", 1f, testing_update);
-				return true;
-			} catch (Exception e) {
-				logger.LogError("** HarmonyPatch_WorldManager_Awake.Prefix ERROR - " + e.StackTrace);
+	[HarmonyPatch(typeof(Inventory), "getAmountOfItemInAllSlots")]
+	class HarmonyPatch_Inventory_getAmountOfItemInAllSlots {
+		private static bool Prefix(ref int __result, int itemId) {
+			if (itemId == Inventory.Instance.getInvItemId(Inventory.Instance.minePass) || itemId == MineEnterExit.mineEntrance.rubyShard.getItemId() || itemId == MineEnterExit.mineEntrance.emeraldShard.getItemId()) {
+				__result = 9999;
+				return false;
 			}
 			return true;
 		}
 	}
 
-	private static void testing_update() {
-		if (!m_enabled.Value) {
-			return;
+	[HarmonyPatch(typeof(AnimalAI), "setUp")]
+	class HarmonyPatch_AnimalAI_setUp {
+		private static void Postfix(ref AnimalAI_Attack ___attacks) {
+			___attacks = null;
 		}
-
 	}
 
+	/*
+	[HarmonyPatch(typeof(), "")]
+	class HarmonyPatch_ {
+		private static bool Prefix() {
+			
+			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(), "")]
+	class HarmonyPatch_ {
+		private static void Postfix() {
+			
+		}
+	}
+
+	[HarmonyPatch(typeof(), "")]
+	class HarmonyPatch_ {
+		private static bool Prefix() {
+			try {
+
+			} catch (Exception e) {
+				DDPlugin._error_log("** HarmonyPatch_.Prefix ERROR - " + e);
+			}
+			return true;
+		}
+	}
+
+	[HarmonyPatch(typeof(), "")]
+	class HarmonyPatch_ {
+		private static void Postfix() {
+			try {
+
+			} catch (Exception e) {
+				DDPlugin._error_log("** HarmonyPatch_.Postfix ERROR - " + e);
+			}
+		}
+	}
+	*/
 }

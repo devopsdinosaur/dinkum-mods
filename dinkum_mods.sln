@@ -11,6 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "weapons_wont_kill_crops", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "testing", "testing\testing.csproj", "{53FDA850-4E89-4BCE-8055-1D2F8D0D31F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{2BFE6E4A-7962-4EE2-9253-0A555637B7C0}"
+	ProjectSection(SolutionItems) = preProject
+		shared\dd_utils.cs = shared\dd_utils.cs
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3D24ECE3-F17A-4D31-BE1D-2771B41D0BBE}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore

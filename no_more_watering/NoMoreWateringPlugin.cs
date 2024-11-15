@@ -1,41 +1,59 @@
-﻿
-using BepInEx;
-using BepInEx.Logging;
-using BepInEx.Configuration;
+﻿using BepInEx;
 using HarmonyLib;
 using System;
+using System.Reflection;
+using System.Collections.Generic;
 
+public static class PluginInfo {
 
-[BepInPlugin("devopsdinosaur.dinkum.no_more_watering", "No More Watering", "0.0.5")]
-public class NoMoreWateringPlugin : BaseUnityPlugin {
+	public const string TITLE = "No More Watering";
+	public const string NAME = "no_more_watering";
+	public const string SHORT_DESCRIPTION = "Crops are automatically watered and fertilized during the night, making the watering can and fertilizer obsolete!";
 
-	private Harmony m_harmony = new Harmony("devopsdinosaur.dinkum.no_more_watering");
-	public static ManualLogSource logger;
-	private static ConfigEntry<bool> m_enabled;
-	
+	public const string VERSION = "0.0.6";
+
+	public const string AUTHOR = "devopsdinosaur";
+	public const string GAME_TITLE = "Dinkum";
+	public const string GAME = "dinkum";
+	public const string GUID = AUTHOR + "." + GAME + "." + NAME;
+	public const string REPO = "dinkum-mods";
+
+	public static Dictionary<string, string> to_dict() {
+		Dictionary<string, string> info = new Dictionary<string, string>();
+		foreach (FieldInfo field in typeof(PluginInfo).GetFields((BindingFlags) 0xFFFFFFF)) {
+			info[field.Name.ToLower()] = (string) field.GetValue(null);
+		}
+		return info;
+	}
+}
+
+[BepInPlugin(PluginInfo.GUID, PluginInfo.TITLE, PluginInfo.VERSION)]
+public class NoMoreWateringPlugin : DDPlugin {
+	private Harmony m_harmony = new Harmony(PluginInfo.GUID);
+
 	private void Awake() {
 		logger = this.Logger;
 		try {
-			m_enabled = this.Config.Bind<bool>("General", "Enabled", true, "Set to false to disable this mod.");
-			if (m_enabled.Value) {
-				this.m_harmony.PatchAll();
-			}
-			logger.LogInfo((object) $"devopsdinosaur.dinkum.no_more_watering v0.0.5{(m_enabled.Value ? "" : " [inactive; disabled in config]")} loaded.");
-		} catch (Exception e) {
-			logger.LogError("** Awake FATAL - " + e.StackTrace);
+            this.m_plugin_info = PluginInfo.to_dict();
+            Settings.Instance.load(this);
+            DDPlugin.set_log_level(Settings.m_log_level.Value);
+            this.create_nexus_page();
+            this.m_harmony.PatchAll();
+            logger.LogInfo($"{PluginInfo.GUID} v{PluginInfo.VERSION} loaded.");
+        } catch (Exception e) {
+			logger.LogError("** Awake FATAL - " + e);
 		}
 	}
 
 	[HarmonyPatch(typeof(TileObjectGrowthStages), "checkIfShouldGrow")]
 	class HarmonyPatch_TileObjectGrowthStages_checkIfShouldGrow {
-
 		private static bool Prefix(int xPos, int yPos, TileObjectGrowthStages __instance) {
 			try {
-				if (m_enabled.Value && __instance.needsTilledSoil) {
+				if (Settings.m_enabled.Value && __instance.needsTilledSoil) {
 					WorldManager.Instance.tileTypeMap[xPos, yPos] = (int) TileTypes.tiles.WetTilledDirtFertilizer;
 				}
 			} catch (Exception e) {
-				logger.LogError("** HarmonyPatch_TileObjectGrowthStages_checkIfShouldGrow_Prefix ERROR - " + e.StackTrace);
+				DDPlugin._error_log("** HarmonyPatch_TileObjectGrowthStages_checkIfShouldGrow.Prefix ERROR - " + e.StackTrace);
 			}
 			return true;
 		}

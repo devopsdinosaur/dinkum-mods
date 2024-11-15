@@ -1,41 +1,48 @@
 ﻿using BepInEx;
-using BepInEx.Logging;
-using BepInEx.Configuration;
 using HarmonyLib;
 using System;
-using UnityEngine;
 using System.Reflection;
+using System.Collections.Generic;
+using UnityEngine;
 
 public static class PluginInfo {
 
 	public const string TITLE = "Unbreakable Tools";
 	public const string NAME = "unbreakable_tools";
+	public const string SHORT_DESCRIPTION = "Tools lose no durability or fuel on use and will not lose durability on revive. Miner's helmet has infinite charge";
 
-	public const string VERSION = "0.0.7";
-	public static string[] CHANGELOG = new string[] {
-		"v0.0.7 - Fixed issue with mining helmet not retaining charge"
-	};
+	public const string VERSION = "0.0.8";
 
 	public const string AUTHOR = "devopsdinosaur";
+	public const string GAME_TITLE = "Dinkum";
 	public const string GAME = "dinkum";
 	public const string GUID = AUTHOR + "." + GAME + "." + NAME;
+	public const string REPO = "dinkum-mods";
+
+	public static Dictionary<string, string> to_dict() {
+		Dictionary<string, string> info = new Dictionary<string, string>();
+		foreach (FieldInfo field in typeof(PluginInfo).GetFields((BindingFlags) 0xFFFFFFF)) {
+			info[field.Name.ToLower()] = (string) field.GetValue(null);
+		}
+		return info;
+	}
 }
 
 [BepInPlugin(PluginInfo.GUID, PluginInfo.TITLE, PluginInfo.VERSION)]
-public class UnbreakableToolsPlugin : BaseUnityPlugin {
-
+public class UnbreakableToolsPlugin : DDPlugin {
 	private Harmony m_harmony = new Harmony(PluginInfo.GUID);
-	public static ManualLogSource logger;
-	private static ConfigEntry<bool> m_enabled;
-	
+
 	private void Awake() {
 		logger = this.Logger;
 		try {
-			m_enabled = this.Config.Bind<bool>("General", "Enabled", true, "Set to false to disable this mod.");
-			this.m_harmony.PatchAll();
-			logger.LogInfo($"{PluginInfo.GUID} v{PluginInfo.VERSION} loaded.");
-		} catch (Exception e) {
-			logger.LogError("** Awake FATAL - " + e.StackTrace);
+            this.m_plugin_info = PluginInfo.to_dict();
+            Settings.Instance.load(this);
+            DDPlugin.set_log_level(Settings.m_log_level.Value);
+            this.create_nexus_page();
+            this.m_harmony.PatchAll();
+            logger.LogInfo($"{PluginInfo.GUID} v{PluginInfo.VERSION} loaded.");
+        } catch (Exception e) {
+			logger.LogError("** Awake FATAL - " + e);
 		}
 	}
 
@@ -48,7 +55,7 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 		private static bool Prefix(Inventory __instance) {
 			try {
 				InventorySlot slot;
-				if (!m_enabled.Value || (m_elapsed += Time.fixedDeltaTime) < CHECK_FREQUENCY) {
+				if (!Settings.m_enabled.Value || (m_elapsed += Time.fixedDeltaTime) < CHECK_FREQUENCY) {
 					return true;
 				}
 				m_elapsed = 0f;
@@ -74,7 +81,7 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 	class HarmonyPatch_Inventory_damageAllTools {
 
 		private static bool Prefix(ref Inventory __instance) {
-			return !m_enabled.Value;
+			return !Settings.m_enabled.Value;
 		}
 	}
 
@@ -86,16 +93,15 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 			ref int[] ___loadedTaskCompletion
 		) {
 			try {
-				if (!m_enabled.Value) {
+				if (!Settings.m_enabled.Value) {
 					return true;
 				}
 				UnityEngine.Random.InitState(NetworkMapSharer.Instance.mineSeed + NetworkMapSharer.Instance.tomorrowsMineSeed);
 				__instance.doublesCheck.Clear();
 				__instance.currentTasks = new Task[3];
 				int taskIdMax = Enum.GetNames(typeof(DailyTaskGenerator.genericTaskType)).Length;
-				for (int i = 0; i < 3; i++)
-				{
-					for (;;) {
+				for (int i = 0; i < 3; i++) {
+					for (; ; ) {
 						__instance.currentTasks[i] = new Task(taskIdMax);
 						if (__instance.currentTasks[i].taskTypeId != (int) DailyTaskGenerator.genericTaskType.BreakATool) {
 							break;
@@ -106,7 +112,7 @@ public class UnbreakableToolsPlugin : BaseUnityPlugin {
 					__instance.taskIcons[i].gameObject.SetActive(value: true);
 				}
 				CurrencyWindows.currency.closeJournal();
-				__instance.GetType().GetMethod("loadDailyTaskCompletion", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, new object[] {});
+				__instance.GetType().GetMethod("loadDailyTaskCompletion", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(__instance, new object[] { });
 				return false;
 			} catch (Exception e) {
 				logger.LogError("** HarmonyPatch_DailyTaskGenerator_generateNewDailyTasks.Prefix ERROR - " + e.StackTrace);

@@ -1,7 +1,10 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <AssemblyName>devopsdinosaur.dinkum.$(MSBuildProjectName)</AssemblyName>
+    <Author>devopsdinosaur</Author>
+    <GameName>dinkum</GameName>
+    <GameFolder>Dinkum</GameFolder>
+    <AssemblyName>$(Author).$(GameName).$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <TargetFramework>net480</TargetFramework>
     <Platforms>AnyCPU</Platforms>
@@ -31,14 +34,14 @@
   <!-- Manual overrides -->
   <PropertyGroup>
     <BepInExPath>$(GamePath)\BepInEx</BepInExPath>
-    <ManagedDataPath>$(GamePath)\Dinkum_Data\Managed</ManagedDataPath>
-    <UnityPath>$(GamePath)\Dinkum_Data\Managed</UnityPath>
+    <ManagedDataPath>$(GamePath)\$(GameFolder)_Data\Managed</ManagedDataPath>
+    <UnityPath>$(GamePath)\$(GameFolder)_Data\Managed</UnityPath>
   </PropertyGroup>
 
   <!-- Set start action -->
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <StartAction>Program</StartAction>
-    <StartProgram>$(GamePath)\Dinkum.exe</StartProgram>
+    <StartProgram>$(GamePath)\$(GameFolder).exe</StartProgram>
     <StartArguments></StartArguments>
     <StartWorkingDirectory>$(GamePath)</StartWorkingDirectory>
   </PropertyGroup>
@@ -86,6 +89,11 @@
     <Reference Include="UnityEngine">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(UnityPath)\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Mirror">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(UnityPath)\Mirror.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AccessibilityModule">
